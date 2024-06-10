@@ -29,7 +29,9 @@ final goRouter = GoRouter(initialLocation: "/", routes: [
     routes: [
       GoRoute(
         path: "home",
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) {
+          return const HomePage();
+        },
       ),
       // ... add other routes
     ],

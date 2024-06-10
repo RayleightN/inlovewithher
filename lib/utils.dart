@@ -1,4 +1,4 @@
-String getZodiacSign(DateTime birthdate) {
+String getZodiacSign(DateTime? birthdate) {
   const List<String> signNames = [
     "Capricorn",
     "Aquarius",
@@ -14,6 +14,9 @@ String getZodiacSign(DateTime birthdate) {
     "Sagittarius",
   ];
   const List<int> signDays = [0, 22, 20, 21, 21, 22, 23, 23, 23, 23, 23, 22, 22];
+  if (birthdate == null) {
+    return "";
+  }
 
   if (birthdate.day < signDays[birthdate.month]) {
     return signNames[birthdate.month - 1];
@@ -22,7 +25,8 @@ String getZodiacSign(DateTime birthdate) {
   }
 }
 
-int calculateAge(DateTime birthDate) {
+int calculateAge(DateTime? birthDate) {
+  if (birthDate == null) return 0;
   DateTime currentDate = DateTime.now();
   int age = currentDate.year - birthDate.year;
   int month1 = currentDate.month;
