@@ -1,27 +1,31 @@
-String getZodiacSign(DateTime? birthdate) {
-  const List<String> signNames = [
-    "Capricorn",
-    "Aquarius",
-    "Pisces",
-    "Aries",
-    "Taurus",
-    "Gemini",
-    "Cancer",
-    "Leo",
-    "Virgo",
-    "Libra",
-    "Scorpio",
-    "Sagittarius",
-  ];
+import 'package:inlovewithher/models/zodiac_model.dart';
+import 'package:intl/intl.dart';
+
+List<ZodiacModel> zodiacList = [
+  ZodiacModel(name: "Capricorn", imagePath: "assets/images/zodiac/10.png"),
+  ZodiacModel(name: "Aquarius", imagePath: "assets/images/zodiac/11.png"),
+  ZodiacModel(name: "Pisces", imagePath: "assets/images/zodiac/12.png"),
+  ZodiacModel(name: "Aries", imagePath: "assets/images/zodiac/1.png"),
+  ZodiacModel(name: "Taurus", imagePath: "assets/images/zodiac/2.png"),
+  ZodiacModel(name: "Gemini", imagePath: "assets/images/zodiac/3.png"),
+  ZodiacModel(name: "Cancer", imagePath: "assets/images/zodiac/4.png"),
+  ZodiacModel(name: "Leo", imagePath: "assets/images/zodiac/5.png"),
+  ZodiacModel(name: "Virgo", imagePath: "assets/images/zodiac/6.png"),
+  ZodiacModel(name: "Libra", imagePath: "assets/images/zodiac/7.png"),
+  ZodiacModel(name: "Scorpio", imagePath: "assets/images/zodiac/8.png"),
+  ZodiacModel(name: "Sagittarius", imagePath: "assets/images/zodiac/9.png"),
+];
+
+ZodiacModel getZodiac(DateTime? birthdate) {
   const List<int> signDays = [0, 22, 20, 21, 21, 22, 23, 23, 23, 23, 23, 22, 22];
   if (birthdate == null) {
-    return "";
+    return ZodiacModel();
   }
 
   if (birthdate.day < signDays[birthdate.month]) {
-    return signNames[birthdate.month - 1];
+    return zodiacList[birthdate.month - 1];
   } else {
-    return signNames[birthdate.month];
+    return zodiacList[birthdate.month];
   }
 }
 
@@ -41,4 +45,12 @@ int calculateAge(DateTime? birthDate) {
     }
   }
   return age;
+}
+
+String formatDateTime(DateTime? date, {String? formatter}) {
+  if (date == null) {
+    return "";
+  }
+  String formattedDate = DateFormat(formatter ?? 'yyyy-MM-dd – kk:mm').format(date);
+  return formattedDate;
 }

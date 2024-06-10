@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class PersonModel {
   PersonModel({
@@ -30,5 +32,12 @@ class PersonModel {
       'avatar': avatar,
       'sex': sex,
     };
+  }
+
+  IconData? getIconSex() {
+    if (sex == "male") {
+      return Icons.male;
+    }
+    return Icons.female;
   }
 }

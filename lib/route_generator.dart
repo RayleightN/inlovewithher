@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inlovewithher/home.dart';
+import 'package:inlovewithher/models/dating_model.dart';
 import 'package:inlovewithher/splash_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -30,7 +31,8 @@ final goRouter = GoRouter(initialLocation: "/", routes: [
       GoRoute(
         path: "home",
         builder: (context, state) {
-          return const HomePage();
+          DatingModel? data = state.extra as DatingModel?;
+          return HomePage(datingData: data);
         },
       ),
       // ... add other routes

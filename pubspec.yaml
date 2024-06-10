@@ -34,6 +34,9 @@ dependencies:
   google_fonts: 5.0.0
   cloud_firestore: ^4.2.0
   firebase_core: ^2.4.0
+  intl: ^0.19.0
+  flutter_spinkit: ^5.2.1
+  cached_network_image: ^3.3.1
 
   flutter:
     sdk: flutter
@@ -67,6 +70,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/zodiac/
     - assets/gif/
 
   # To add assets to your application, add an assets section, like this:
