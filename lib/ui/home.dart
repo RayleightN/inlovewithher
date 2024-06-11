@@ -1,7 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inlovewithher/camera_helper.dart';
 import 'package:inlovewithher/database_helper.dart';
+import 'package:inlovewithher/dialog_utils.dart';
+import 'package:inlovewithher/fire_storage_api.dart';
+import 'package:inlovewithher/firestore_api.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import 'anniversary_page.dart';
 
@@ -14,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   PageController controller = PageController();
+  int currentPage = 0;
   @override
   void initState() {
     super.initState();
@@ -29,6 +32,9 @@ class _HomePageState extends State<HomePage> {
         return Stack(
           children: [
             PageView(
+              onPageChanged: (page) {
+                currentPage = page;
+              },
               controller: controller,
               children: children,
             ),
@@ -44,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          await onOpenCamera();
+                          await onOpenCamera(context);
                         },
                         child: const Icon(Icons.camera_alt, color: Colors.white, size: 30),
                       ),
@@ -58,12 +64,22 @@ class _HomePageState extends State<HomePage> {
     }));
   }
 
-  Future<void> onOpenCamera() async {
+  Future<void> onOpenCamera(BuildContext context) async {
     var images = await CameraHelper().pickMedia(
+      context,
       enabledRecording: false,
       showCamera: true,
       maxAssetSelect: 1,
       requestType: RequestType.image,
     );
+    Loading().show();
+    String imageUrl = (await FireStorageApi().putFileToFireStorage(images, storagePath: "images") ?? []).first;
+    var currentAnniversaryId = (DatabaseHelper().datingData?.anniversaryDay ?? [])[currentPage];
+    var currentAnniversaryModel =
+        (DatabaseHelper().datingData?.listAnniversary ?? [])[currentPage].copyWith(bgImage: imageUrl);
+
+    await FireStoreApi(collection: 'AnniversaryDay')
+        .updateData(currentAnniversaryId, data: currentAnniversaryModel.toParam());
+    Loading().dismiss();
   }
 }

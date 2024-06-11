@@ -9,6 +9,23 @@ class AnniversaryModel {
     this.id,
   });
   final String? bgImage;
+
+  AnniversaryModel copyWith({
+    final String? bgImage,
+    final DateTime? dateTimeStamp,
+    final String? title,
+    final String? type,
+    final String? id,
+  }) {
+    return AnniversaryModel(
+      bgImage: bgImage ?? this.bgImage,
+      dateTimeStamp: dateTimeStamp ?? this.dateTimeStamp,
+      title: title ?? this.title,
+      type: type ?? this.type,
+      id: id ?? this.id,
+    );
+  }
+
   final DateTime? dateTimeStamp;
   final String? title;
   final String? type;
@@ -27,6 +44,15 @@ class AnniversaryModel {
   }
 
   Map<String, dynamic> toJson() {
+    return {
+      "backgroundImage": bgImage,
+      "title": title,
+      "type": type,
+      "dateTimeStamp": dateTimeStamp != null ? Timestamp.fromDate(dateTimeStamp!) : null,
+    };
+  }
+
+  Map<Object, Object?> toParam() {
     return {
       "backgroundImage": bgImage,
       "title": title,

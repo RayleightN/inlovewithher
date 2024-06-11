@@ -45,7 +45,8 @@ class CameraHelper {
     }
   }
 
-  Future<List<ImagesPickerModel>> pickMedia({
+  Future<List<ImagesPickerModel>> pickMedia(
+    BuildContext context, {
     List<ImagesPickerModel>? currentListFile,
     int maxAssetSelect = 9,
     RequestType requestType = RequestType.image,
@@ -60,7 +61,7 @@ class CameraHelper {
       return [];
     }
     List<AssetEntity> listPicked = await AssetPicker.pickAssets(
-          globalContext,
+          context,
           pickerConfig: AssetPickerConfig(
             // selectedAssets: selectedAssets,
             maxAssets: maxAssetSelect - (currentListFile ?? []).length,
