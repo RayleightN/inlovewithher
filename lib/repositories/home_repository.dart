@@ -1,8 +1,8 @@
 import 'package:inlovewithher/models/person_model.dart';
 
-import 'firestore_api.dart';
-import 'models/anniversary_model.dart';
-import 'models/dating_model.dart';
+import '../firestore_api.dart';
+import '../models/anniversary_model.dart';
+import '../models/dating_model.dart';
 
 class HomeRepository {
   Future<DatingModel?> getDatingData() async {

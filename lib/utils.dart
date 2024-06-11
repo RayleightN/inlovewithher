@@ -1,3 +1,5 @@
+import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/material.dart';
 import 'package:inlovewithher/models/zodiac_model.dart';
 import 'package:intl/intl.dart';
 
@@ -53,4 +55,8 @@ String formatDateTime(DateTime? date, {String? formatter}) {
   }
   String formattedDate = DateFormat(formatter ?? 'yyyy-MM-dd – kk:mm').format(date);
   return formattedDate;
+}
+
+void showToast(message) {
+  BotToast.showText(text: message, textStyle: const TextStyle(fontSize: 14, color: Colors.white));
 }

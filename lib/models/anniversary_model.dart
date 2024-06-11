@@ -6,11 +6,13 @@ class AnniversaryModel {
     this.title,
     this.type,
     this.dateTimeStamp,
+    this.id,
   });
   final String? bgImage;
   final DateTime? dateTimeStamp;
   final String? title;
   final String? type;
+  final String? id;
 
   factory AnniversaryModel.fromJson(Map<String, dynamic> map) {
     return AnniversaryModel(
@@ -20,6 +22,7 @@ class AnniversaryModel {
       dateTimeStamp: (map['dateTimeStamp'] != null && map['dateTimeStamp'] is Timestamp)
           ? (map['dateTimeStamp'] as Timestamp).toDate()
           : null,
+      id: map['id'],
     );
   }
 

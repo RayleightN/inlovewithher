@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PersonModel {
@@ -8,11 +7,13 @@ class PersonModel {
     this.dateOfBirth,
     this.sex,
     this.avatar,
+    this.id,
   });
   final String? name;
   final DateTime? dateOfBirth;
   final String? sex;
   final String? avatar;
+  final String? id;
 
   factory PersonModel.fromJson(Map<String, dynamic> map) {
     return PersonModel(
@@ -22,6 +23,7 @@ class PersonModel {
           : null,
       avatar: map['avatar'],
       sex: map['sex'],
+      id: map['id'],
     );
   }
 

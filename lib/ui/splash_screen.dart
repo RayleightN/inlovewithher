@@ -4,7 +4,8 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inlovewithher/home_repository.dart';
+import 'package:inlovewithher/database_helper.dart';
+import 'package:inlovewithher/repositories/home_repository.dart';
 import 'package:inlovewithher/models/anniversary_model.dart';
 import 'package:inlovewithher/models/dating_model.dart';
 import 'package:inlovewithher/models/person_model.dart';
@@ -18,7 +19,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
-  DatingModel? datingModel;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) async {
     getDataDating().then((value) {
-      context.go("/home", extra: datingModel);
+      context.go("/home");
     });
   }
 
@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
     var repo = HomeRepository();
     List<AnniversaryModel> listAnniversary = [];
     List<PersonModel> listPeople = [];
-    datingModel = await repo.getDatingData();
+    DatingModel? datingModel = await repo.getDatingData();
     List<Future> listAnniversaryFuture =
         (datingModel?.anniversaryDay ?? []).map((anniversaryId) => repo.getAnniversaryData(anniversaryId)).toList();
     List<Future> listPeopleFuture =
@@ -73,5 +73,6 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
     }
     datingModel?.listAnniversary = listAnniversary;
     datingModel?.listPeople = listPeople;
+    DatabaseHelper().datingData = datingModel;
   }
 }

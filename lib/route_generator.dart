@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inlovewithher/home.dart';
-import 'package:inlovewithher/models/dating_model.dart';
-import 'package:inlovewithher/splash_screen.dart';
+import 'package:inlovewithher/ui/home.dart';
+import 'package:inlovewithher/ui/splash_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case "home":
-      return defaultBuilder(settings: settings, screen: HomePage());
+      return defaultBuilder(settings: settings, screen: const HomePage());
     case "splash":
       return defaultBuilder(settings: settings, screen: const SplashScreen());
     default:
@@ -31,8 +30,7 @@ final goRouter = GoRouter(initialLocation: "/", routes: [
       GoRoute(
         path: "home",
         builder: (context, state) {
-          DatingModel? data = state.extra as DatingModel?;
-          return HomePage(datingData: data);
+          return const HomePage();
         },
       ),
       // ... add other routes
