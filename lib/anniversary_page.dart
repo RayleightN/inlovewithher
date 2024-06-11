@@ -89,6 +89,9 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
       placeholder: (_, __) {
         return placeHolder;
       },
+      errorWidget: (_, __, ___) {
+        return placeHolder;
+      },
     );
   }
 
@@ -201,19 +204,28 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
 
   Widget buildAvatar({String? imageUrl}) {
     const double size = 80;
-    if (imageUrl == null) {
-      return Container(
-        width: size,
-        height: size,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.pinkAccent,
-        ),
-      );
-    }
+    var placeHolder = Container(
+      width: size,
+      height: size,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.pinkAccent,
+      ),
+    );
     return ClipRRect(
       borderRadius: BorderRadius.circular(48),
-      child: Image.network(imageUrl, height: size, width: size, fit: BoxFit.fill),
+      child: CachedNetworkImage(
+        width: size,
+        height: size,
+        imageUrl: imageUrl ?? "",
+        fit: BoxFit.fill,
+        placeholder: (_, __) {
+          return placeHolder;
+        },
+        errorWidget: (_, __, ___) {
+          return placeHolder;
+        },
+      ),
     );
   }
 
