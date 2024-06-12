@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:inlovewithher/models/image_picker_model.dart';
 
+import '../colors.dart';
+
 class DisplayImage extends StatelessWidget {
   const DisplayImage({
     Key? key,
@@ -30,6 +32,8 @@ class DisplayImage extends StatelessWidget {
       );
     }
     return CachedNetworkImage(
+      // memCacheHeight: height is num ? ((height ?? 0) * 0.75).toInt() : null,
+      // memCacheWidth: width is num ? ((width ?? 0) * 0.75).toInt() : null,
       width: width,
       height: height,
       imageUrl: image?.url ?? "",
@@ -46,11 +50,17 @@ class DisplayImage extends StatelessWidget {
   Widget placeHolderWidget() {
     return placeHolder ??
         Container(
+          alignment: Alignment.center,
           width: width,
           height: height,
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.pinkAccent,
+            color: defaultAvatar,
+          ),
+          child: const Icon(
+            Icons.person,
+            color: grayTextColor3,
+            size: 50,
           ),
         );
   }

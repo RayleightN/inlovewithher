@@ -14,7 +14,10 @@ class FireStoreApi {
     }).toList();
   }
 
-  Future<DocumentReference<dynamic>> add({required Map<String, dynamic> data}) async {
+  Future<DocumentReference<dynamic>?> add({Map<String, dynamic>? data}) async {
+    if (data == null) {
+      return null;
+    }
     return await collectionRef.add(data);
   }
 
@@ -40,10 +43,17 @@ class FireStoreApi {
     return null;
   }
 
-  Future<void> updateData(String id, {Map<Object, Object?>? data}) async {
-    if (data == null) {
+  Future<void> updateData(String? id, {Map<Object, Object?>? data}) async {
+    if (data == null || id == null) {
       return;
     }
     await collectionRef.doc(id).update(data);
+  }
+
+  Future<void> delete(String? id) async {
+    if (id == null) {
+      return;
+    }
+    await collectionRef.doc(id).delete();
   }
 }

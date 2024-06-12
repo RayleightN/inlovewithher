@@ -79,8 +79,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     margin: const EdgeInsets.only(bottom: 8, top: 8),
                                     child: FormEditProfile(
                                       icon: Icon(person.getIcon(), color: person.getIconColor()),
-                                      nameController: TextEditingController(),
-                                      birthdayController: TextEditingController(),
                                       updatePerson: (person) {
                                         if (person == null) return;
                                         listPeople[index] = person.copyWith();
@@ -116,8 +114,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 if ((item.media ?? "").isNotEmpty) {
                                   var res = await FireStorageApi().uploadFileToStorage(item, storagePath: "avatar");
                                   listPeople[i] = listPeople[i].copyWith(avatar: res.url);
-                                  i++;
                                 }
+                                i++;
                               });
                               await Future.wait(listPeople
                                   .map((p) =>
@@ -181,14 +179,10 @@ class FormEditProfile extends StatefulWidget {
   const FormEditProfile({
     Key? key,
     this.icon,
-    required this.nameController,
-    required this.birthdayController,
     this.updatePerson,
     this.person,
   }) : super(key: key);
   final Widget? icon;
-  final TextEditingController nameController;
-  final TextEditingController birthdayController;
   final Function(PersonModel?)? updatePerson;
   final PersonModel? person;
 
@@ -199,6 +193,8 @@ class FormEditProfile extends StatefulWidget {
 class _FormEditProfileState extends State<FormEditProfile> {
   final FocusNode nameFocus = FocusNode();
   final FocusNode birthdayFocus = FocusNode();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController birthdayController = TextEditingController();
 
   @override
   void initState() {
@@ -208,14 +204,13 @@ class _FormEditProfileState extends State<FormEditProfile> {
 
   @override
   void didUpdateWidget(covariant FormEditProfile oldWidget) {
-    _init();
     super.didUpdateWidget(oldWidget);
   }
 
   void _init() {
     var formatter = "dd-MM-yyyy";
-    widget.nameController.text = widget.person?.name ?? "";
-    widget.birthdayController.text = formatDateTime(widget.person?.dateOfBirth, formatter: formatter);
+    nameController.text = widget.person?.name ?? "";
+    birthdayController.text = formatDateTime(widget.person?.dateOfBirth, formatter: formatter);
   }
 
   @override
@@ -233,7 +228,7 @@ class _FormEditProfileState extends State<FormEditProfile> {
               TextFormField(
                 focusNode: nameFocus,
                 cursorColor: Colors.black,
-                controller: widget.nameController,
+                controller: nameController,
                 maxLength: 100,
                 decoration: InputDecoration(
                   counterText: "",
@@ -258,14 +253,14 @@ class _FormEditProfileState extends State<FormEditProfile> {
               GestureDetector(
                 onTap: () async {
                   var date = await CalendarHelper().chooseDate(context, initialDate: widget.person?.dateOfBirth);
-                  widget.birthdayController.text = formatDateTime(date);
+                  birthdayController.text = formatDateTime(date);
                   widget.updatePerson?.call(widget.person?.copyWith(dateOfBirth: date));
                 },
                 child: TextFormField(
                   enabled: false,
                   focusNode: birthdayFocus,
                   cursorColor: Colors.black,
-                  controller: widget.birthdayController,
+                  controller: birthdayController,
                   maxLength: 100,
                   decoration: const InputDecoration(
                     counterText: "",
@@ -311,20 +306,6 @@ class _FormEditProfileState extends State<FormEditProfile> {
 
   Widget _buildAvatar() {
     const double size = 80;
-    var placeHolder = Container(
-      alignment: Alignment.center,
-      width: size,
-      height: size,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: defaultAvatar,
-      ),
-      child: const Icon(
-        Icons.person,
-        color: grayTextColor3,
-        size: 50,
-      ),
-    );
     return ClipRRect(
       borderRadius: BorderRadius.circular(48),
       child: DisplayImage(
@@ -332,7 +313,6 @@ class _FormEditProfileState extends State<FormEditProfile> {
         height: size,
         width: size,
         image: ImagesPickerModel(url: widget.person?.avatar, media: widget.person?.avatarFile),
-        placeHolder: placeHolder,
       ),
     );
   }

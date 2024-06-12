@@ -74,8 +74,8 @@ class MainCubit extends Cubit<MainState> {
     Loading().dismiss();
   }
 
-  Future<void> editAnniversary(BuildContext context) async {
-    await bottomSheet.show(context, child: const EditBottomSheet());
+  Future<void> editAnniversary(BuildContext context, {AnniversaryModel? anniversary}) async {
+    await bottomSheet.show(context, child: EditBottomSheet(anniversary: anniversary));
   }
 
   void updateAnniversaryPage(int page) {

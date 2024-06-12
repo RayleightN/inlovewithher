@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inlovewithher/models/anniversary_model.dart';
 import 'package:inlovewithher/models/person_model.dart';
+import 'package:inlovewithher/ui/edit_anniversary.dart';
 import 'package:inlovewithher/ui/edit_profile_screen.dart';
 import 'package:inlovewithher/ui/home.dart';
 import 'package:inlovewithher/ui/splash_screen.dart';
@@ -40,6 +42,14 @@ final goRouter = GoRouter(initialLocation: "/", routes: [
             path: EditProfileScreen.router,
             builder: (context, state) {
               return const EditProfileScreen();
+            },
+          ),
+          GoRoute(
+            name: EditAnniversary.router,
+            path: EditAnniversary.router,
+            builder: (context, state) {
+              AnniversaryModel? data = state.extra as AnniversaryModel?;
+              return EditAnniversary(anniversary: data);
             },
           ),
         ],

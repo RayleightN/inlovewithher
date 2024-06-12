@@ -7,6 +7,7 @@ class AnniversaryModel {
     this.type,
     this.dateTimeStamp,
     this.id,
+    this.fileBgImage,
   });
   AnniversaryModel copyWith({
     final String? bgImage,
@@ -14,6 +15,7 @@ class AnniversaryModel {
     final String? title,
     final String? type,
     final String? id,
+    String? fileBgImage,
   }) {
     return AnniversaryModel(
       bgImage: bgImage ?? this.bgImage,
@@ -21,6 +23,7 @@ class AnniversaryModel {
       title: title ?? this.title,
       type: type ?? this.type,
       id: id ?? this.id,
+      fileBgImage: fileBgImage ?? this.fileBgImage,
     );
   }
 
@@ -29,6 +32,7 @@ class AnniversaryModel {
   final String? type;
   final String? id;
   final String? bgImage;
+  final String? fileBgImage;
 
   factory AnniversaryModel.fromJson(Map<String, dynamic> map) {
     return AnniversaryModel(

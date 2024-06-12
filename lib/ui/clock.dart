@@ -129,7 +129,7 @@ class _ClockState extends State<Clock> {
     weeksDiff = (totalDays - (yearsDiff ?? 0) * 365 - ((monthsDiff ?? 0) * 30)) ~/ 7;
     daysDiff = totalDays - (yearsDiff ?? 0) * 365 - (monthsDiff ?? 0) * 30 - (weeksDiff ?? 0) * 7;
     if (shouldSetState) {
-      setState(() {});
+      if (mounted) setState(() {});
     }
   }
 }

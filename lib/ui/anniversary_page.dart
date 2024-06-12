@@ -1,12 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:inlovewithher/cubit/main_cubit.dart';
 import 'package:inlovewithher/models/anniversary_model.dart';
 import 'package:inlovewithher/models/image_picker_model.dart';
-import 'package:inlovewithher/models/person_model.dart';
-import 'package:inlovewithher/screen_utils.dart';
 import 'package:inlovewithher/ui/display_image.dart';
 import 'package:inlovewithher/utils.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
@@ -35,10 +32,10 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: BlocBuilder<MainCubit, MainState>(
-        builder: (context, state) {
-          AnniversaryModel data = (state.datingData?.listAnniversary ?? [])[widget.page];
-          List<PersonModel> people = state.datingData?.listPeople ?? [];
+      body: Builder(
+        builder: (BuildContext context) {
+          var mainCubit = context.read<MainCubit>();
+          AnniversaryModel data = (mainCubit.datingData?.listAnniversary ?? [])[widget.page];
           return Stack(
             alignment: Alignment.center,
             children: [
@@ -52,7 +49,6 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
                   const SizedBox(height: 48),
                 ],
               ),
-              buildRowPeople(people),
             ],
           );
         },
@@ -60,47 +56,25 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
     );
   }
 
-  Widget buildRowPeople(List<PersonModel> people) {
-    if (people.length < 2) {
-      return const SizedBox();
-    }
-    return Positioned(
-      bottom: ScreenUtils().pdBot + 12,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          buildInformation(people.first),
-          Image.asset(
-            "assets/gif/heart.gif",
-            width: 40,
-            height: 40,
-            fit: BoxFit.fill,
-          ),
-          buildInformation(people.last),
-        ],
-      ),
-    );
-  }
-
   Widget buildBackground(AnniversaryModel data) {
     var placeHolder = Container(
-      width: double.infinity,
       height: double.infinity,
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.pinkAccent.withOpacity(0.5),
+        gradient: const LinearGradient(
+          begin: Alignment(0.00, -1.00),
+          end: Alignment(0, 1),
+          colors: [Color(0xFFFFF2F9), Color(0xFFFDF3E8)],
+        ),
+        borderRadius: BorderRadius.circular(12),
       ),
     );
-    return CachedNetworkImage(
+    return DisplayImage(
       width: double.infinity,
       height: double.infinity,
-      imageUrl: data.bgImage ?? '',
+      image: ImagesPickerModel(url: data.bgImage ?? ''),
       fit: BoxFit.fill,
-      placeholder: (_, __) {
-        return placeHolder;
-      },
-      errorWidget: (_, __, ___) {
-        return placeHolder;
-      },
+      placeHolder: placeHolder,
     );
   }
 
@@ -179,83 +153,6 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
               ),
               const Clock(type: ClockType.time),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildInformation(PersonModel person) {
-    return Column(
-      children: [
-        buildAvatar(imageUrl: person.avatar),
-        const SizedBox(height: 4),
-        Text(
-          "${person.name}",
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            buildAgeZodiac(
-                bgColor: Colors.orange, text: calculateAge(person.dateOfBirth).toString(), icon: person.getIconSex()),
-            const SizedBox(width: 8),
-            buildAgeZodiac(
-              bgColor: Colors.purpleAccent,
-              text: getZodiac(person.dateOfBirth).name,
-              iconPath: getZodiac(person.dateOfBirth).imagePath,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget buildAvatar({String? imageUrl}) {
-    const double size = 80;
-    var placeHolder = Container(
-      width: size,
-      height: size,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.pinkAccent,
-      ),
-    );
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(48),
-      child: DisplayImage(
-        fit: BoxFit.fill,
-        height: size,
-        width: size,
-        image: ImagesPickerModel(url: imageUrl),
-        placeHolder: placeHolder,
-      ),
-    );
-  }
-
-  Widget buildAgeZodiac({required Color bgColor, String? text, IconData? icon, String? iconPath}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: bgColor,
-      ),
-      child: Row(
-        children: [
-          if (icon != null) ...[
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 20,
-            ),
-          ],
-          if (iconPath != null) ...[
-            Image.asset(iconPath, fit: BoxFit.fill, width: 20, height: 20),
-            const SizedBox(width: 4),
-          ],
-          Text(
-            "$text",
-            style: const TextStyle(color: Colors.white),
           ),
         ],
       ),
