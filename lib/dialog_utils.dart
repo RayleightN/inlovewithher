@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:inlovewithher/colors.dart';
 
 class Loading {
   Timer _timer = Timer(const Duration(milliseconds: 1), () {});
@@ -44,9 +45,9 @@ class Loading {
             onPopInvoked: (_) async {
               return Future.value(!ignoreContentClick);
             },
-            child: SpinKitThreeBounce(
+            child: const SpinKitThreeBounce(
               size: 30,
-              color: Colors.blueAccent.withOpacity(0.8),
+              color: mainColor,
             ),
           );
         },

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inlovewithher/global.dart';
 import 'package:inlovewithher/permission_service.dart';
 import 'package:inlovewithher/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -79,7 +78,7 @@ class CameraHelper {
                   enabledRecording: enabledRecording,
                   onCaptured: (picked) {
                     result.add(picked);
-                    globalContext.pop();
+                    context.pop();
                   },
                 );
               }
@@ -131,13 +130,14 @@ class CameraHelper {
     return result;
   }
 
-  Future<ImagesPickerModel?> openCamera({
+  Future<ImagesPickerModel?> openCamera(
+    BuildContext context, {
     bool enabledRecording = false,
   }) async {
     ImagesPickerModel? picked;
     try {
       final AssetEntity? entity = await CameraPicker.pickFromCamera(
-        globalContext,
+        context,
         pickerConfig: CameraPickerConfig(
           enableRecording: enabledRecording,
           textDelegate: const NPCameraPickerTextDelegate(),
@@ -226,7 +226,7 @@ class _DisplayCameraState extends State<DisplayCamera> with AfterLayoutMixin, Ro
     }
     return GestureDetector(
       onTap: () async {
-        var captured = await CameraHelper().openCamera(enabledRecording: widget.enabledRecording);
+        var captured = await CameraHelper().openCamera(context, enabledRecording: widget.enabledRecording);
         _initController();
         await controller.resumePreview();
         if (captured != null) {

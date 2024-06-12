@@ -1,18 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:inlovewithher/cubit/main_cubit.dart';
 import 'package:inlovewithher/models/anniversary_model.dart';
+import 'package:inlovewithher/models/image_picker_model.dart';
 import 'package:inlovewithher/models/person_model.dart';
 import 'package:inlovewithher/screen_utils.dart';
+import 'package:inlovewithher/ui/display_image.dart';
 import 'package:inlovewithher/utils.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 import 'clock.dart';
 
 class AnniversaryPage extends StatefulWidget {
-  const AnniversaryPage({Key? key, required this.data, this.people}) : super(key: key);
-  final AnniversaryModel data;
-  final List<PersonModel>? people;
+  const AnniversaryPage({Key? key, required this.page}) : super(key: key);
+  final int page;
 
   @override
   State<AnniversaryPage> createState() => _AnniversaryPageState();
@@ -32,27 +35,33 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          buildBackground(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: BlocBuilder<MainCubit, MainState>(
+        builder: (context, state) {
+          AnniversaryModel data = (state.datingData?.listAnniversary ?? [])[widget.page];
+          List<PersonModel> people = state.datingData?.listPeople ?? [];
+          return Stack(
+            alignment: Alignment.center,
             children: [
-              buildDisplayDateTime(),
-              const SizedBox(height: 24),
-              buildProgressDays(),
-              const SizedBox(height: 48),
+              buildBackground(data),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  buildDisplayDateTime(data),
+                  const SizedBox(height: 24),
+                  buildProgressDays(data),
+                  const SizedBox(height: 48),
+                ],
+              ),
+              buildRowPeople(people),
             ],
-          ),
-          buildRowPeople(),
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget buildRowPeople() {
-    if ((widget.people ?? []).length < 2) {
+  Widget buildRowPeople(List<PersonModel> people) {
+    if (people.length < 2) {
       return const SizedBox();
     }
     return Positioned(
@@ -60,20 +69,20 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          buildInformation(widget.people!.first),
+          buildInformation(people.first),
           Image.asset(
             "assets/gif/heart.gif",
             width: 40,
             height: 40,
             fit: BoxFit.fill,
           ),
-          buildInformation(widget.people!.last),
+          buildInformation(people.last),
         ],
       ),
     );
   }
 
-  Widget buildBackground() {
+  Widget buildBackground(AnniversaryModel data) {
     var placeHolder = Container(
       width: double.infinity,
       height: double.infinity,
@@ -84,7 +93,7 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
     return CachedNetworkImage(
       width: double.infinity,
       height: double.infinity,
-      imageUrl: widget.data.bgImage ?? '',
+      imageUrl: data.bgImage ?? '',
       fit: BoxFit.fill,
       placeholder: (_, __) {
         return placeHolder;
@@ -95,7 +104,7 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
     );
   }
 
-  Widget buildProgressDays() {
+  Widget buildProgressDays(AnniversaryModel data) {
     return ValueListenableBuilder<double>(
         valueListenable: valueNotifier,
         builder: (_, value, child) {
@@ -118,11 +127,11 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
                   Colors.purpleAccent
                 ],
                 onGetText: (double value) {
-                  if (widget.data.dateTimeStamp == null) {
+                  if (data.dateTimeStamp == null) {
                     return const Text("");
                   }
                   return Text(
-                    '${((now.difference(widget.data.dateTimeStamp!).inDays) * value ~/ 100).toInt()}',
+                    '${((now.difference(data.dateTimeStamp!).inDays) * value ~/ 100).toInt()}\nngày',
                     style: const TextStyle(
                       fontSize: 50,
                       fontWeight: FontWeight.bold,
@@ -134,7 +143,7 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
               ),
               const SizedBox(height: 12),
               Text(
-                "${widget.data.title}",
+                "${data.title}",
                 style: GoogleFonts.abrilFatface(
                   textStyle: const TextStyle(color: Colors.purpleAccent, letterSpacing: .5, fontSize: 20),
                 ),
@@ -144,14 +153,14 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
         });
   }
 
-  Widget buildDisplayDateTime() {
+  Widget buildDisplayDateTime(AnniversaryModel data) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
           Clock(
             type: ClockType.timeDiff,
-            dateCompared: widget.data.dateTimeStamp,
+            dateCompared: data.dateTimeStamp,
           ),
           const SizedBox(height: 12),
           Row(
@@ -164,7 +173,7 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
                   color: Colors.grey.withOpacity(0.5),
                 ),
                 child: Text(
-                  formatDateTime(widget.data.dateTimeStamp, formatter: "dd/MM/yyyy"),
+                  formatDateTime(data.dateTimeStamp, formatter: "dd/MM/yyyy"),
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -214,17 +223,12 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
     );
     return ClipRRect(
       borderRadius: BorderRadius.circular(48),
-      child: CachedNetworkImage(
-        width: size,
-        height: size,
-        imageUrl: imageUrl ?? "",
+      child: DisplayImage(
         fit: BoxFit.fill,
-        placeholder: (_, __) {
-          return placeHolder;
-        },
-        errorWidget: (_, __, ___) {
-          return placeHolder;
-        },
+        height: size,
+        width: size,
+        image: ImagesPickerModel(url: imageUrl),
+        placeHolder: placeHolder,
       ),
     );
   }

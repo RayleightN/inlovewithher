@@ -9,6 +9,10 @@ sealed class MainState extends Equatable {
   MainState copyWith({DatingModel? datingData}) {
     return DatingDataLoaded(datingData: datingData ?? this.datingData);
   }
+
+  MainState loading({DatingModel? datingData}) {
+    return DatingDataLoaded(datingData: datingData ?? this.datingData);
+  }
 }
 
 final class MainInitial extends MainState {
@@ -18,6 +22,15 @@ final class MainInitial extends MainState {
 
 final class DatingDataLoaded extends MainState {
   const DatingDataLoaded({
+    this.datingData,
+  });
+  final DatingModel? datingData;
+  @override
+  List<dynamic> get props => [datingData];
+}
+
+final class DatingDataLoading extends MainState {
+  const DatingDataLoading({
     this.datingData,
   });
   final DatingModel? datingData;

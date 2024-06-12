@@ -1,11 +1,28 @@
+import 'package:equatable/equatable.dart';
 import 'package:inlovewithher/models/person_model.dart';
 
 import 'anniversary_model.dart';
 
 class DatingModel {
-  DatingModel({this.anniversaryDay, this.people});
+  const DatingModel({this.anniversaryDay, this.people, this.listPeople, this.listAnniversary});
   final List<String>? anniversaryDay;
   final List<String>? people;
+  final List<AnniversaryModel>? listAnniversary;
+  final List<PersonModel>? listPeople;
+
+  DatingModel copyWith({
+    final List<String>? anniversaryDay,
+    final List<String>? people,
+    final List<AnniversaryModel>? listAnniversary,
+    final List<PersonModel>? listPeople,
+  }) {
+    return DatingModel(
+      anniversaryDay: anniversaryDay ?? this.anniversaryDay,
+      people: people ?? this.people,
+      listAnniversary: listAnniversary ?? this.listAnniversary,
+      listPeople: listPeople ?? this.listPeople,
+    );
+  }
 
   factory DatingModel.fromJson(Map<String, dynamic> map) {
     return DatingModel(
@@ -20,21 +37,5 @@ class DatingModel {
       'anniversaryDay': anniversaryDay,
       'people': people,
     };
-  }
-
-  List<AnniversaryModel>? _listAnniversary;
-
-  List<AnniversaryModel>? get listAnniversary => _listAnniversary;
-
-  set listAnniversary(List<AnniversaryModel>? value) {
-    _listAnniversary = value;
-  }
-
-  List<PersonModel>? _listPeople;
-
-  List<PersonModel>? get listPeople => _listPeople;
-
-  set listPeople(List<PersonModel>? value) {
-    _listPeople = value;
   }
 }

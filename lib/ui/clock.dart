@@ -93,13 +93,15 @@ class _ClockState extends State<Clock> {
 
   Widget buildCircleNumber(String? num) {
     return Container(
-      padding: EdgeInsets.all(4),
-      decoration: BoxDecoration(
+      width: 26,
+      height: 26,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.purpleAccent,
       ),
       child: Text('$num',
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
           )),
     );

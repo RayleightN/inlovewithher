@@ -17,7 +17,7 @@ class FireStorageApi {
 
   var storageReference = FirebaseStorage.instance.ref();
 
-  Future<List<String>?> putFileToFireStorage(
+  Future<List<String>?> putListFileToFireStorage(
     List<ImagesPickerModel>? images, {
     required String storagePath,
   }) async {

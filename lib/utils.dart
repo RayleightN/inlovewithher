@@ -53,10 +53,19 @@ String formatDateTime(DateTime? date, {String? formatter}) {
   if (date == null) {
     return "";
   }
-  String formattedDate = DateFormat(formatter ?? 'yyyy-MM-dd – kk:mm').format(date);
+  String formattedDate = DateFormat(formatter ?? 'yyyy-MM-dd').format(date);
   return formattedDate;
 }
 
 void showToast(message) {
   BotToast.showText(text: message, textStyle: const TextStyle(fontSize: 14, color: Colors.white));
+}
+
+extension IterableExtension<T> on Iterable<T> {
+  T? firstWhereOrNull(bool Function(T element) test) {
+    for (var element in this) {
+      if (test(element)) return element;
+    }
+    return null;
+  }
 }
