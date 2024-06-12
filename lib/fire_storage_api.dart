@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:inlovewithher/utils.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +14,8 @@ class FireStorageApi {
   factory FireStorageApi() {
     return _instance;
   }
+
+  var storageReference = FirebaseStorage.instance.ref();
 
   Future<List<String>?> putFileToFireStorage(
     List<ImagesPickerModel>? images, {
@@ -33,15 +35,14 @@ class FireStorageApi {
     required String storagePath,
   }) async {
     int time = DateTime.now().hashCode;
-    String dateTime = DateFormat('yyyy/MM/dd').format(DateTime.now());
+    String dateTime = DateFormat('yyyy-MM-dd').format(DateTime.now());
     String path = platformFile.media ?? "";
 
     String rawPath = '$time.${path.split('/').last.split('.')[1]}';
-    firebase_storage.UploadTask uploadTask;
-    firebase_storage.Reference storageReference =
-        firebase_storage.FirebaseStorage.instance.ref().child(storagePath).child(dateTime).child(rawPath);
+    UploadTask uploadTask;
+    Reference reference = storageReference.child(storagePath).child(dateTime).child(rawPath);
 
-    uploadTask = storageReference.putFile(File(path));
+    uploadTask = reference.putFile(File(path));
     await uploadTask.whenComplete(() async {
       platformFile.url = await uploadTask.snapshot.ref.getDownloadURL();
     });

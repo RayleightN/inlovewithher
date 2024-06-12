@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'models/dating_model.dart';
 
 class DatabaseHelper {
@@ -7,13 +9,5 @@ class DatabaseHelper {
 
   factory DatabaseHelper() {
     return _instance;
-  }
-
-  DatingModel? _datingData;
-
-  DatingModel? get datingData => _datingData;
-
-  set datingData(DatingModel? value) {
-    _datingData = value;
   }
 }

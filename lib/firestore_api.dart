@@ -41,9 +41,9 @@ class FireStoreApi {
   }
 
   Future<void> updateData(String id, {Map<Object, Object?>? data}) async {
-    if (data != null) {
+    if (data == null) {
       return;
     }
-    await collectionRef.doc(id).update(data!);
+    await collectionRef.doc(id).update(data);
   }
 }

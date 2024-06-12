@@ -8,8 +8,6 @@ class AnniversaryModel {
     this.dateTimeStamp,
     this.id,
   });
-  final String? bgImage;
-
   AnniversaryModel copyWith({
     final String? bgImage,
     final DateTime? dateTimeStamp,
@@ -30,6 +28,7 @@ class AnniversaryModel {
   final String? title;
   final String? type;
   final String? id;
+  final String? bgImage;
 
   factory AnniversaryModel.fromJson(Map<String, dynamic> map) {
     return AnniversaryModel(
