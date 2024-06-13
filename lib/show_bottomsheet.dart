@@ -92,7 +92,7 @@ class EditBottomSheet extends StatelessWidget {
             icon: Icons.edit_calendar,
             onTap: () {
               goRouter.pop(context);
-              context.pushNamed(EditAnniversary.router, extra: anniversary);
+              goRouter.pushNamed(EditAnniversary.router, extra: anniversary);
             },
           ),
           const SizedBox(height: 12),
@@ -104,7 +104,7 @@ class EditBottomSheet extends StatelessWidget {
           icon: Icons.add_card_sharp,
           onTap: () {
             goRouter.pop(context);
-            context.pushNamed(EditAnniversary.router);
+            goRouter.pushNamed(EditAnniversary.router);
           },
         ),
         const SizedBox(height: 12),
@@ -115,7 +115,7 @@ class EditBottomSheet extends StatelessWidget {
           icon: Icons.people,
           onTap: () {
             goRouter.pop(context);
-            context.pushNamed(EditProfileScreen.router);
+            goRouter.pushNamed(EditProfileScreen.router);
           },
         ),
         const SizedBox(height: 12),

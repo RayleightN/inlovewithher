@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:inlovewithher/colors.dart';
 import 'package:inlovewithher/utils.dart';
 
 enum ClockType { time, timeDiff }
@@ -74,16 +75,16 @@ class _ClockState extends State<Clock> {
       ),
       child: Column(
         children: [
-          Text('$number', style: TextStyle(fontSize: 30, color: Colors.white)),
+          Text('$number', style: const TextStyle(fontSize: 30, color: Colors.white)),
           Container(
-              padding: EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(24),
               ),
               child: Text(
                 '$text${showS ? "s" : ""}',
-                style: TextStyle(fontSize: 12, color: Colors.deepPurpleAccent),
+                style: const TextStyle(fontSize: 12, color: Colors.deepPurpleAccent),
               )),
           const SizedBox(height: 12),
         ],
@@ -98,7 +99,7 @@ class _ClockState extends State<Clock> {
       alignment: Alignment.center,
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.purpleAccent,
+        color: mainColor,
       ),
       child: Text('$num',
           style: const TextStyle(
@@ -112,7 +113,7 @@ class _ClockState extends State<Clock> {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       child: const Text(
         ':',
-        style: TextStyle(color: Colors.purpleAccent, fontSize: 20, fontWeight: FontWeight.w600),
+        style: TextStyle(color: mainColor, fontSize: 20, fontWeight: FontWeight.w600),
       ),
     );
   }

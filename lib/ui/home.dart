@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inlovewithher/colors.dart';
 import 'package:inlovewithher/cubit/main_cubit.dart';
+import 'package:inlovewithher/ui/components.dart';
 import '../models/image_picker_model.dart';
 import '../models/person_model.dart';
+import '../route_generator.dart';
 import '../screen_utils.dart';
 import '../utils.dart';
 import 'anniversary_page.dart';
 import 'display_image.dart';
+import 'edit_profile_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -36,72 +40,86 @@ class _HomePageState extends State<HomePage> {
         }
       },
       canPop: false,
-      child: Scaffold(
-        body: BlocBuilder<MainCubit, MainState>(
-          builder: (context, state) {
-            var data = mainCubit.datingData;
-            if (data == null) {
-              return const SizedBox();
-            }
-            var childrenPage = List.generate((data.listAnniversary ?? []).length, (page) {
-              return AnniversaryPage(
-                page: page,
-              );
-            }).toList();
-            List<PersonModel> people = data.listPeople ?? [];
-            return Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                childrenPage.isNotEmpty
-                    ? PageView(
-                        onPageChanged: (page) {
-                          mainCubit.updateAnniversaryPage(page);
-                        },
-                        controller: controller,
-                        children: childrenPage,
-                      )
-                    : Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment(0.00, -1.00),
-                            end: Alignment(0, 1),
-                            colors: [Color(0xFFFFF2F9), Color(0xFFFDF3E8)],
+      child: AnnotatedRegion(
+        value: lightStatusBar,
+        child: Scaffold(
+          body: BlocBuilder<MainCubit, MainState>(
+            builder: (context, state) {
+              var data = mainCubit.datingData;
+              if (data == null) {
+                return const SizedBox();
+              }
+              var childrenPage = List.generate((data.listAnniversary ?? []).length, (page) {
+                return AnniversaryPage(
+                  page: page,
+                );
+              }).toList();
+              List<PersonModel> people = data.listPeople ?? [];
+              return Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  childrenPage.isNotEmpty
+                      ? PageView(
+                          onPageChanged: (page) {
+                            mainCubit.updateAnniversaryPage(page);
+                          },
+                          controller: controller,
+                          children: childrenPage,
+                        )
+                      : Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment(0.00, -1.00),
+                              end: Alignment(0, 1),
+                              colors: [Color(0xFFFFF2F9), Color(0xFFFDF3E8)],
+                            ),
                           ),
                         ),
-                      ),
-                SafeArea(
-                  child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              var index = mainCubit.anniversaryPage;
-                              if (data.listAnniversary!.length == 1) {
-                                index = 0;
-                              }
-                              mainCubit.editAnniversary(context,
-                                  anniversary:
-                                      ((data.listAnniversary ?? []).isNotEmpty) ? data.listAnniversary![index] : null);
-                            },
-                            child: buildIcon(Icons.edit),
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              await mainCubit.changeAnniversaryBackground(context);
-                            },
-                            child: buildIcon(Icons.camera_alt),
-                          ),
-                        ],
-                      )),
-                ),
-                buildRowPeople(people),
-              ],
-            );
-          },
+                  SafeArea(
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                var index = mainCubit.anniversaryPage;
+                                if (data.listAnniversary!.length == 1) {
+                                  index = 0;
+                                }
+                                mainCubit.editAnniversary(context,
+                                    anniversary: ((data.listAnniversary ?? []).isNotEmpty)
+                                        ? data.listAnniversary![index]
+                                        : null);
+                              },
+                              child: buildIcon(Icons.edit),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                await mainCubit.changeAnniversaryBackground(context);
+                              },
+                              child: buildIcon(Icons.camera_alt),
+                            ),
+                          ],
+                        )),
+                  ),
+                  buildRowPeople(people),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 100),
+                    alignment: Alignment.bottomCenter,
+                    child: Image.asset(
+                      "assets/gif/heart.gif",
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -121,41 +139,48 @@ class _HomePageState extends State<HomePage> {
     if (people.length < 2) {
       return const SizedBox();
     }
-    return Positioned(
-      bottom: ScreenUtils().pdBot + 12,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          buildInformation(people.first),
-          Image.asset(
-            "assets/gif/heart.gif",
-            width: 40,
-            height: 40,
-            fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: () {
+        goRouter.pushNamed(EditProfileScreen.router);
+      },
+      child: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(child: buildInformation(people.first)),
+              Expanded(
+                child: buildInformation(people.last),
+              ),
+            ],
           ),
-          buildInformation(people.last),
-        ],
+        ),
       ),
     );
   }
 
   Widget buildInformation(PersonModel person) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         buildAvatar(imageUrl: person.avatar),
         const SizedBox(height: 4),
         Text(
           "${person.name}",
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
         ),
         const SizedBox(height: 12),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             buildAgeZodiac(
                 bgColor: Colors.orange, text: calculateAge(person.dateOfBirth).toString(), icon: person.getIconSex()),
             const SizedBox(width: 8),
             buildAgeZodiac(
-              bgColor: Colors.purpleAccent,
+              bgColor: mainColor,
               text: getZodiac(person.dateOfBirth).name,
               iconPath: getZodiac(person.dateOfBirth).imagePath,
             ),

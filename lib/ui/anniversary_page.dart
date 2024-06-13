@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:inlovewithher/colors.dart';
 import 'package:inlovewithher/cubit/main_cubit.dart';
 import 'package:inlovewithher/models/anniversary_model.dart';
 import 'package:inlovewithher/models/image_picker_model.dart';
@@ -8,7 +9,9 @@ import 'package:inlovewithher/ui/display_image.dart';
 import 'package:inlovewithher/utils.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
+import '../route_generator.dart';
 import 'clock.dart';
+import 'edit_anniversary.dart';
 
 class AnniversaryPage extends StatefulWidget {
   const AnniversaryPage({Key? key, required this.page}) : super(key: key);
@@ -106,10 +109,10 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
                   }
                   return Text(
                     '${((now.difference(data.dateTimeStamp!).inDays) * value ~/ 100).toInt()}\nngày',
-                    style: const TextStyle(
+                    style: GoogleFonts.abrilFatface(
                       fontSize: 50,
                       fontWeight: FontWeight.bold,
-                      color: Colors.purpleAccent,
+                      color: mainColor,
                     ),
                     textAlign: TextAlign.center,
                   );
@@ -119,7 +122,7 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
               Text(
                 "${data.title}",
                 style: GoogleFonts.abrilFatface(
-                  textStyle: const TextStyle(color: Colors.purpleAccent, letterSpacing: .5, fontSize: 20),
+                  textStyle: const TextStyle(color: mainColor, letterSpacing: .5, fontSize: 20),
                 ),
               ),
             ],
@@ -128,33 +131,38 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
   }
 
   Widget buildDisplayDateTime(AnniversaryModel data) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        children: [
-          Clock(
-            type: ClockType.timeDiff,
-            dateCompared: data.dateTimeStamp,
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey.withOpacity(0.5),
+    return GestureDetector(
+      onTap: () {
+        goRouter.pushNamed(EditAnniversary.router, extra: data);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          children: [
+            Clock(
+              type: ClockType.timeDiff,
+              dateCompared: data.dateTimeStamp,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.grey.withOpacity(0.5),
+                  ),
+                  child: Text(
+                    formatDateTime(data.dateTimeStamp, formatter: "dd/MM/yyyy"),
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
-                child: Text(
-                  formatDateTime(data.dateTimeStamp, formatter: "dd/MM/yyyy"),
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              const Clock(type: ClockType.time),
-            ],
-          ),
-        ],
+                const Clock(type: ClockType.time),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
