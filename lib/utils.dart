@@ -53,7 +53,7 @@ String formatDateTime(DateTime? date, {String? formatter}) {
   if (date == null) {
     return "";
   }
-  String formattedDate = DateFormat(formatter ?? 'yyyy-MM-dd').format(date);
+  String formattedDate = DateFormat(formatter ?? 'dd-MM-yyyy').format(date);
   return formattedDate;
 }
 
