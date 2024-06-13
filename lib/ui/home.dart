@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   buildRowPeople(people),
                   Container(
-                    margin: const EdgeInsets.only(bottom: 100),
+                    margin: EdgeInsets.only(bottom: ScreenUtils().pdBot + 84),
                     alignment: Alignment.bottomCenter,
                     child: Image.asset(
                       "assets/gif/heart.gif",
@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: SafeArea(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
+          margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
