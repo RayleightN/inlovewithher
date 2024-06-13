@@ -34,15 +34,17 @@ class FireStorageApi {
     ImagesPickerModel platformFile, {
     required String storagePath,
   }) async {
-    int time = DateTime.now().hashCode;
     String dateTime = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    String second = formatDateTime(DateTime.now(), formatter: 'HH:mm:ss');
     String path = platformFile.media ?? "";
-
-    String rawPath = '$time.${path.split('/').last.split('.')[1]}';
+    File file = File(path);
+    if (!file.existsSync()) {
+      return Future.value(platformFile);
+    }
     UploadTask uploadTask;
-    Reference reference = storageReference.child(storagePath).child(dateTime).child(rawPath);
+    Reference reference = storageReference.child(storagePath).child(dateTime).child(second);
 
-    uploadTask = reference.putFile(File(path));
+    uploadTask = reference.putFile(file);
     await uploadTask.whenComplete(() async {
       platformFile.url = await uploadTask.snapshot.ref.getDownloadURL();
     });
