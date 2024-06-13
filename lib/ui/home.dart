@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inlovewithher/cubit/main_cubit.dart';
 import '../models/image_picker_model.dart';
@@ -18,6 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   PageController controller = PageController();
   late final MainCubit mainCubit;
+  DateTime? currentBackPressTime;
 
   @override
   void initState() {
@@ -27,74 +29,92 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<MainCubit, MainState>(
-        builder: (context, state) {
-          var data = mainCubit.datingData;
-          if (data == null) {
-            return const SizedBox();
-          }
-          var childrenPage = List.generate((data.listAnniversary ?? []).length, (page) {
-            return AnniversaryPage(
-              page: page,
-            );
-          }).toList();
-          List<PersonModel> people = data.listPeople ?? [];
-          return Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              childrenPage.isNotEmpty
-                  ? PageView(
-                      onPageChanged: (page) {
-                        mainCubit.updateAnniversaryPage(page);
-                      },
-                      controller: controller,
-                      children: childrenPage,
-                    )
-                  : Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment(0.00, -1.00),
-                          end: Alignment(0, 1),
-                          colors: [Color(0xFFFFF2F9), Color(0xFFFDF3E8)],
+    return PopScope(
+      onPopInvoked: (bool didPop) async {
+        if (didPop) {
+          SystemNavigator.pop();
+        }
+      },
+      canPop: false,
+      child: Scaffold(
+        body: BlocBuilder<MainCubit, MainState>(
+          builder: (context, state) {
+            var data = mainCubit.datingData;
+            if (data == null) {
+              return const SizedBox();
+            }
+            var childrenPage = List.generate((data.listAnniversary ?? []).length, (page) {
+              return AnniversaryPage(
+                page: page,
+              );
+            }).toList();
+            List<PersonModel> people = data.listPeople ?? [];
+            return Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                childrenPage.isNotEmpty
+                    ? PageView(
+                        onPageChanged: (page) {
+                          mainCubit.updateAnniversaryPage(page);
+                        },
+                        controller: controller,
+                        children: childrenPage,
+                      )
+                    : Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment(0.00, -1.00),
+                            end: Alignment(0, 1),
+                            colors: [Color(0xFFFFF2F9), Color(0xFFFDF3E8)],
+                          ),
                         ),
                       ),
-                    ),
-              SafeArea(
-                child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            var index = mainCubit.anniversaryPage;
-                            if (data.listAnniversary!.length == 1) {
-                              index = 0;
-                            }
-                            mainCubit.editAnniversary(context,
-                                anniversary:
-                                    ((data.listAnniversary ?? []).isNotEmpty) ? data.listAnniversary![index] : null);
-                          },
-                          child: buildIcon(Icons.edit),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            await mainCubit.changeAnniversaryBackground(context);
-                          },
-                          child: buildIcon(Icons.camera_alt),
-                        ),
-                      ],
-                    )),
-              ),
-              buildRowPeople(people),
-            ],
-          );
-        },
+                SafeArea(
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              var index = mainCubit.anniversaryPage;
+                              if (data.listAnniversary!.length == 1) {
+                                index = 0;
+                              }
+                              mainCubit.editAnniversary(context,
+                                  anniversary:
+                                      ((data.listAnniversary ?? []).isNotEmpty) ? data.listAnniversary![index] : null);
+                            },
+                            child: buildIcon(Icons.edit),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              await mainCubit.changeAnniversaryBackground(context);
+                            },
+                            child: buildIcon(Icons.camera_alt),
+                          ),
+                        ],
+                      )),
+                ),
+                buildRowPeople(people),
+              ],
+            );
+          },
+        ),
       ),
     );
+  }
+
+  bool _onPopInvoked() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null || now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      showToast("Nhấn lần nữa để thoát");
+      return true;
+    }
+    return false;
   }
 
   Widget buildRowPeople(List<PersonModel> people) {

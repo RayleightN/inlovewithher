@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) async {
     context.read<MainCubit>().getDataDating().then((value) {
-      goRouter.go("/home");
+      goRouter.pushReplacementNamed("home");
     });
   }
 }

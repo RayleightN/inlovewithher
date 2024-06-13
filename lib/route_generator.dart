@@ -32,6 +32,7 @@ final goRouter = GoRouter(initialLocation: "/", routes: [
     builder: (context, state) => const SplashScreen(),
     routes: [
       GoRoute(
+        name: "home",
         path: "home",
         builder: (context, state) {
           return const HomePage();
