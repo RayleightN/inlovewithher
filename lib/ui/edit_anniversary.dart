@@ -97,8 +97,9 @@ class _EditAnniversaryState extends State<EditAnniversary> {
                         Loading().show();
                         ImagesPickerModel currentImage =
                             ImagesPickerModel(url: data?.bgImage, media: data?.fileBgImage);
-                        currentImage =
-                            await FireStorageApi().uploadFileToStorage(currentImage, storagePath: "background_image");
+                        ImageUploadModel imageUpload =
+                            ImageUploadModel(media: currentImage.media ?? "", url: currentImage.url ?? "");
+                        currentImage = await FireStorageApi().uploadImage(imageUpload, storagePath: "background_image");
                         data = data?.copyWith(bgImage: currentImage.url);
                         if (widget.anniversary == null) {
                           // thêm bản ghi mới vào bảng "AnniversaryDay";
@@ -152,10 +153,10 @@ class _EditAnniversaryState extends State<EditAnniversary> {
                 },
                 child: platformIconBack(Colors.black),
               ),
-              const Text(
-                'Ngày kỷ niệm',
+              Text(
+                widget.anniversary != null ? "Ngày Kỷ niệm" : "Thêm ngày kỷ niệm",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
+                style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
               ),
               platformIconBack(Colors.transparent),
             ],
@@ -387,6 +388,14 @@ class _EditAnniversaryState extends State<EditAnniversary> {
   }
 
   Widget _buttonPickImage() {
+    var placeholder = Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: grayColor3,
+      ),
+    );
     return InkWell(
       onTap: () async {
         var images = await CameraHelper().pickMedia(
@@ -400,7 +409,7 @@ class _EditAnniversaryState extends State<EditAnniversary> {
           return;
         }
         ImagesPickerModel image = images.first;
-        data = data?.copyWith(bgImage: image.url, fileBgImage: image.media);
+        data = data?.copyWith(fileBgImage: image.media);
         setState(() {});
       },
       child: emptyImage(data)
@@ -420,6 +429,7 @@ class _EditAnniversaryState extends State<EditAnniversary> {
           : ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: DisplayImage(
+                placeHolder: placeholder,
                 image: ImagesPickerModel(media: data?.fileBgImage, url: data?.bgImage),
                 width: 80,
                 height: 80,

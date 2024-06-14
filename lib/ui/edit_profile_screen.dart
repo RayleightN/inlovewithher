@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:inlovewithher/ui/top_bar_scroll.dart';
 import 'package:inlovewithher/utils.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import '../camera_helper.dart';
+import '../constants.dart';
 import '../firestore_api.dart';
 import '../models/image_picker_model.dart';
 import 'button.dart';
@@ -107,12 +109,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               var listImage = listPeople
                                   .map((p) => ImagesPickerModel(
                                         media: p.avatarFile,
+                                        url: p.avatar,
                                       ))
                                   .toList();
                               int i = 0;
                               await Future.forEach<ImagesPickerModel>(listImage, (item) async {
                                 if ((item.media ?? "").isNotEmpty) {
-                                  var res = await FireStorageApi().uploadFileToStorage(item, storagePath: "avatar");
+                                  ImageUploadModel itemUpload =
+                                      ImageUploadModel(media: item.media ?? "", url: item.url ?? "");
+                                  var res = await FireStorageApi().uploadImage(itemUpload, storagePath: "avatar");
                                   listPeople[i] = listPeople[i].copyWith(avatar: res.url);
                                 }
                                 i++;
@@ -195,6 +200,8 @@ class _FormEditProfileState extends State<FormEditProfile> {
   final FocusNode birthdayFocus = FocusNode();
   TextEditingController nameController = TextEditingController();
   TextEditingController birthdayController = TextEditingController();
+  final TextEditingController sexController = TextEditingController();
+  final List<String> listSex = [Sex.male, Sex.female];
 
   @override
   void initState() {
@@ -230,18 +237,18 @@ class _FormEditProfileState extends State<FormEditProfile> {
                 cursorColor: Colors.black,
                 controller: nameController,
                 maxLength: 100,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.person),
                   counterText: "",
-                  enabledBorder: const OutlineInputBorder(
+                  enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: dividerColor),
                   ),
                   helperText: "",
-                  icon: widget.icon,
                   labelText: 'Name',
-                  labelStyle: const TextStyle(
+                  labelStyle: TextStyle(
                     color: grayColor5,
                   ),
-                  focusedBorder: const OutlineInputBorder(
+                  focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.purpleAccent),
                   ),
                 ),
@@ -249,37 +256,47 @@ class _FormEditProfileState extends State<FormEditProfile> {
                   widget.updatePerson?.call(widget.person?.copyWith(name: text));
                 },
               ),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: () async {
-                  var date = await CalendarHelper().chooseDate(context, initialDate: widget.person?.dateOfBirth);
-                  birthdayController.text = formatDateTime(date);
-                  widget.updatePerson?.call(widget.person?.copyWith(dateOfBirth: date));
-                },
-                child: TextFormField(
-                  enabled: false,
-                  focusNode: birthdayFocus,
-                  cursorColor: Colors.black,
-                  controller: birthdayController,
-                  maxLength: 100,
-                  decoration: const InputDecoration(
-                    counterText: "",
-                    icon: Icon(Icons.calendar_month, color: Colors.grey),
-                    labelText: 'Birthday',
-                    labelStyle: TextStyle(
-                      color: grayColor5,
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: dividerColor),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: dividerColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.purpleAccent),
+              // const SizedBox(height: 8),
+              // _buildSexDropDownMenu(),
+              // const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        var date = await CalendarHelper().chooseDate(context, initialDate: widget.person?.dateOfBirth);
+                        birthdayController.text = formatDateTime(date);
+                        widget.updatePerson?.call(widget.person?.copyWith(dateOfBirth: date));
+                      },
+                      child: TextFormField(
+                        enabled: false,
+                        focusNode: birthdayFocus,
+                        cursorColor: Colors.black,
+                        controller: birthdayController,
+                        maxLength: 100,
+                        decoration: const InputDecoration(
+                          counterText: "",
+                          icon: Icon(Icons.calendar_month),
+                          labelText: 'Birthday',
+                          labelStyle: TextStyle(
+                            color: grayColor5,
+                          ),
+                          disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: dividerColor),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: dividerColor),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.purpleAccent),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(width: 12),
+                  _buildSexDropDownMenu(),
+                ],
               ),
             ],
           ),
@@ -314,6 +331,44 @@ class _FormEditProfileState extends State<FormEditProfile> {
         width: size,
         image: ImagesPickerModel(url: widget.person?.avatar, media: widget.person?.avatarFile),
       ),
+    );
+  }
+
+  Widget _buildSexDropDownMenu() {
+    // return DropdownButton<String>(
+    //     items: listSex.map((item) => DropdownMenuItem<String>(child: Text(""))).toList(), onChanged: (selected) {});
+    return DropdownMenu<String>(
+      enabled: true,
+      leadingIcon: widget.icon,
+      inputDecorationTheme: const InputDecorationTheme(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: dividerColor),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: dividerColor),
+        ),
+        labelStyle: TextStyle(
+          color: grayColor5,
+        ),
+      ),
+      initialSelection: widget.person?.sex,
+      controller: sexController,
+      requestFocusOnTap: true,
+      label: const Text('Sex'),
+      onSelected: (String? sex) {
+        widget.updatePerson?.call(widget.person?.copyWith(sex: sex));
+      },
+      searchCallback: (_, query) {
+        // widget.updatePerson?.call(widget.person);
+        return null;
+      },
+      dropdownMenuEntries: listSex.map<DropdownMenuEntry<String>>((String item) {
+        return DropdownMenuEntry<String>(
+          value: item,
+          label: item,
+          enabled: true,
+        );
+      }).toList(),
     );
   }
 }

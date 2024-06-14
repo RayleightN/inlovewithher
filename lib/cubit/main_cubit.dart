@@ -65,7 +65,8 @@ class MainCubit extends Cubit<MainState> {
     }
     ImagesPickerModel image = images.first;
     Loading().show();
-    image = await FireStorageApi().uploadFileToStorage(image, storagePath: "background_image");
+    ImageUploadModel imageUpload = ImageUploadModel(media: image.media ?? "", url: image.url ?? "");
+    image = await FireStorageApi().uploadImage(imageUpload, storagePath: "background_image");
     var currentAnniversaryId = (datingData?.anniversaryDay ?? [])[anniversaryPage];
     var currentAnniversaryModel = (datingData?.listAnniversary ?? [])[anniversaryPage].copyWith(bgImage: image.url);
     await FireStoreApi(collection: 'AnniversaryDay')

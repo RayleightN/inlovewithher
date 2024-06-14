@@ -22,3 +22,9 @@ class ImagesPickerModel {
         "percent_upload": percentUpload,
       };
 }
+
+class ImageUploadModel {
+  final String media;
+  final String url;
+  ImageUploadModel({required this.media, required this.url});
+}
