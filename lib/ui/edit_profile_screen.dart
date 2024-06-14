@@ -237,18 +237,18 @@ class _FormEditProfileState extends State<FormEditProfile> {
                 cursorColor: Colors.black,
                 controller: nameController,
                 maxLength: 100,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.person),
+                decoration: InputDecoration(
+                  icon: widget.icon,
                   counterText: "",
-                  enabledBorder: OutlineInputBorder(
+                  enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: dividerColor),
                   ),
                   helperText: "",
                   labelText: 'Name',
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                     color: grayColor5,
                   ),
-                  focusedBorder: OutlineInputBorder(
+                  focusedBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.purpleAccent),
                   ),
                 ),
@@ -294,7 +294,7 @@ class _FormEditProfileState extends State<FormEditProfile> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 8),
                   _buildSexDropDownMenu(),
                 ],
               ),
@@ -335,11 +335,10 @@ class _FormEditProfileState extends State<FormEditProfile> {
   }
 
   Widget _buildSexDropDownMenu() {
-    // return DropdownButton<String>(
-    //     items: listSex.map((item) => DropdownMenuItem<String>(child: Text(""))).toList(), onChanged: (selected) {});
     return DropdownMenu<String>(
+      width: 160,
       enabled: true,
-      leadingIcon: widget.icon,
+      leadingIcon: Icon(widget.person?.getIconSex()),
       inputDecorationTheme: const InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: dividerColor),
@@ -354,7 +353,7 @@ class _FormEditProfileState extends State<FormEditProfile> {
       initialSelection: widget.person?.sex,
       controller: sexController,
       requestFocusOnTap: true,
-      label: const Text('Sex'),
+      label: const Text('Sexiness'),
       onSelected: (String? sex) {
         widget.updatePerson?.call(widget.person?.copyWith(sex: sex));
       },
@@ -367,6 +366,7 @@ class _FormEditProfileState extends State<FormEditProfile> {
           value: item,
           label: item,
           enabled: true,
+          leadingIcon: Icon(getIconPerson(sex: item)),
         );
       }).toList(),
     );

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:inlovewithher/models/zodiac_model.dart';
 import 'package:intl/intl.dart';
 
+import 'constants.dart';
+
 List<ZodiacModel> zodiacList = [
   ZodiacModel(name: "Capricorn", imagePath: "assets/images/zodiac/10.png"),
   ZodiacModel(name: "Aquarius", imagePath: "assets/images/zodiac/11.png"),
@@ -61,6 +63,14 @@ void showToast(message) {
   BotToast.showText(text: message, textStyle: const TextStyle(fontSize: 14, color: Colors.white));
 }
 
+IconData? getIconPerson({String? sex}) {
+  if (sex == Sex.male) {
+    return Icons.boy;
+  }
+  return Icons.girl;
+}
+
+// Extension zone
 extension IterableExtension<T> on Iterable<T> {
   T? firstWhereOrNull(bool Function(T element) test) {
     for (var element in this) {
