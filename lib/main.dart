@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
             hideKeyboard(context);
           },
           child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
             title: 'Save the day',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: mainColor),

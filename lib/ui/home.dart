@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: SafeArea(
         child: Container(
-          margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+          margin: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
