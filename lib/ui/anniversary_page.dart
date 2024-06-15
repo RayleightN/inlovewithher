@@ -85,44 +85,64 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
     return ValueListenableBuilder<double>(
         valueListenable: valueNotifier,
         builder: (_, value, child) {
+          double size = 180;
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SimpleCircularProgressBar(
-                size: 200,
-                animationDuration: 2,
-                backStrokeWidth: 10,
-                progressStrokeWidth: 10,
-                valueNotifier: valueNotifier,
-                mergeMode: false,
-                backColor: Colors.pinkAccent,
-                progressColors: const [
-                  Colors.cyan,
-                  Colors.green,
-                  Colors.amberAccent,
-                  Colors.redAccent,
-                  Colors.purpleAccent
+              Stack(
+                children: [
+                  Container(
+                    height: size,
+                    width: size,
+                    decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                  ),
+                  SimpleCircularProgressBar(
+                    size: size,
+                    animationDuration: 2,
+                    backStrokeWidth: 5,
+                    progressStrokeWidth: 5,
+                    valueNotifier: valueNotifier,
+                    mergeMode: false,
+                    backColor: Colors.white,
+                    progressColors: [
+                      Colors.deepPurple.withOpacity(0.7),
+                      // Colors.cyan,
+                      // Colors.green,
+                      // Colors.amberAccent,
+                      // Colors.redAccent,
+                      // Colors.purpleAccent
+                    ],
+                    onGetText: (double value) {
+                      if (data.dateTimeStamp == null) {
+                        return const Text("");
+                      }
+                      return Text(
+                        '${((now.difference(data.dateTimeStamp!).inDays) * value ~/ 100).toInt()}\nngày',
+                        style: GoogleFonts.enriqueta(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: mainColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    },
+                  ),
                 ],
-                onGetText: (double value) {
-                  if (data.dateTimeStamp == null) {
-                    return const Text("");
-                  }
-                  return Text(
-                    '${((now.difference(data.dateTimeStamp!).inDays) * value ~/ 100).toInt()}\nngày',
-                    style: GoogleFonts.abrilFatface(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      color: mainColor,
-                    ),
-                    textAlign: TextAlign.center,
-                  );
-                },
               ),
               const SizedBox(height: 12),
-              Text(
-                "${data.title}",
-                style: GoogleFonts.abrilFatface(
-                  textStyle: const TextStyle(color: mainColor, letterSpacing: .5, fontSize: 20),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.deepPurple.withOpacity(0.7), width: 0.8),
+                ),
+                child: Text(
+                  "${data.title}",
+                  style: GoogleFonts.quattrocento(
+                    textStyle:
+                        const TextStyle(color: mainColor, letterSpacing: .5, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],
