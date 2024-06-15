@@ -326,7 +326,7 @@ class _FormEditProfileState extends State<FormEditProfile> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(48),
       child: DisplayImage(
-        fit: BoxFit.fill,
+        fit: BoxFit.cover,
         height: size,
         width: size,
         image: ImagesPickerModel(url: widget.person?.avatar, media: widget.person?.avatarFile),

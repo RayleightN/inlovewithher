@@ -70,7 +70,7 @@ class _ClockState extends State<Clock> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.deepPurpleAccent,
+        color: Colors.deepPurple.withOpacity(0.7),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(

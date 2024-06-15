@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(48),
       child: DisplayImage(
-        fit: BoxFit.fill,
+        fit: BoxFit.cover,
         height: size,
         width: size,
         image: ImagesPickerModel(url: imageUrl),

@@ -67,7 +67,7 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
         gradient: const LinearGradient(
           begin: Alignment(0.00, -1.00),
           end: Alignment(0, 1),
-          colors: [Color(0xFFFFF2F9), Color(0xFFFDF3E8)],
+          colors: [mainColor, Color(0xFFFDF3E8)],
         ),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -76,7 +76,7 @@ class _AnniversaryPageState extends State<AnniversaryPage> with AutomaticKeepAli
       width: double.infinity,
       height: double.infinity,
       image: ImagesPickerModel(url: data.bgImage ?? ''),
-      fit: BoxFit.fill,
+      fit: BoxFit.cover,
       placeHolder: placeHolder,
     );
   }
